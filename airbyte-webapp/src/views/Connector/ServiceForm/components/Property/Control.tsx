@@ -2,6 +2,7 @@ import { FieldArray, useField } from "formik";
 import React from "react";
 
 import { DropDown, Input, Multiselect, TextArea, TagInput } from "components";
+import { SecretTextArea } from "components/base/SecretTextArea";
 
 import { FormBaseItem } from "core/form/types";
 import { isDefined } from "utils/common";
@@ -117,7 +118,7 @@ export const Control: React.FC<ControlProps> = ({
       <ConfirmationControl
         component={
           property.multiline && (isEditInProgress || !isFormInEditMode) ? (
-            <TextArea
+            <SecretTextArea
               {...field}
               autoComplete="off"
               placeholder={placeholder}
