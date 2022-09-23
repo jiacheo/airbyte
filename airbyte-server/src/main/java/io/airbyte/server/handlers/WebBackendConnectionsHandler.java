@@ -103,17 +103,24 @@ public class WebBackendConnectionsHandler {
     return Enums.convertTo(stateHandler.getState(connectionIdRequestBody).getStateType(), ConnectionStateType.class);
   }
 
-  public WebBackendConnectionReadList webBackendListConnectionsForWorkspace(final WorkspaceIdRequestBody workspaceIdRequestBody)
-      throws ConfigNotFoundException, IOException, JsonValidationException {
+  public WebBackendConnectionReadList webBackendListConnectionsForWorkspace(final WorkspaceIdRequestBody workspaceIdRequestBody) throws IOException {
 
-    final List<WebBackendConnectionListItem> connectionItems = Lists.newArrayList();
-    final List<StandardSync> standardSyncs = configRepository.listWorkspaceStandardSyncs(workspaceIdRequestBody.getWorkspaceId());
-    final Map<UUID, SourceRead> sourceReadById = getSourceReadById(standardSyncs.stream().map(StandardSync::getSourceId).toList());
+    final List<StandardSync> standardSyncs =
+        configRepository.listWorkspaceStandardSyncs(workspaceIdRequestBody.getWorkspaceId());
+
+    final Map<UUID, SourceRead> sourceReadById =
+        getSourceReadById(standardSyncs.stream().map(StandardSync::getSourceId).toList());
+
     final Map<UUID, DestinationRead> destinationReadById =
         getDestinationReadById(standardSyncs.stream().map(StandardSync::getDestinationId).toList());
-    final Map<UUID, JobRead> latestJobByConnectionId = getLatestJobByConnectionId(standardSyncs.stream().map(StandardSync::getConnectionId).toList());
+
+    final Map<UUID, JobRead> latestJobByConnectionId =
+        getLatestJobByConnectionId(standardSyncs.stream().map(StandardSync::getConnectionId).toList());
+
     final Map<UUID, JobRead> runningJobByConnectionId =
         getRunningJobByConnectionId(standardSyncs.stream().map(StandardSync::getConnectionId).toList());
+
+    final List<WebBackendConnectionListItem> connectionItems = Lists.newArrayList();
 
     for (final StandardSync standardSync : configRepository.listWorkspaceStandardSyncs(workspaceIdRequestBody.getWorkspaceId())) {
       // don't include deleted connections
